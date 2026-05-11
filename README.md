@@ -1,35 +1,43 @@
-# ◈ Laboration X API
-Detta repository innehåller ett API för laboration X i kursen X.
+# ◈ Laboration 4 API
+Detta repository innehåller ett API för laboration 4 i kursen 4.
 
-API:et hanterar olika exempler för att skapa X. CRUD (Create, Read, Update, Delete) funktionalitet är implementerat.
+Detta API hanterar sparandet och skapandet av användarkonton. För säkerhet sparas inga lösenord i ren text på databasen. Vissa routes på API är låsta och går endast att komma åt efter en lyckad autentisering med hjälp av jsonwebtoken.
 
 ## ⬀ Länk till API
-API:et finns tillgängligt på följande URL: [https://api.clr-server.com/example](https://api.clr-server.com/example)
+API:et finns tillgängligt på följande URL: [https://lab4.api.clr-server.com/](https://lab4.api.clr-server.com/)
 
 ## ✦ Databas och Scheman
 Detta API använder NoSQL-databassystemet MongoDB.
 
-### 1. Example:
+### 1. Users:
 | Attribut | Data |
 | :--- | :--- |
-
+| username | { type: String, required: true, unique: true } |
+| email | { type: String, required: true, unique: true } |
+| password | { type: String, required: true } |
 
 ## ⚙ Användning
 | Metod | Ändpunkt | Beskrivning |
 | :--- | :--- | :--- |
-| GET | `/example` | Hämtar alla exempel. |
-| GET | `/example/:ID` | Hämtar ett specifikt exempel med angivet ID. |
-| POST | `/example` | Lagrar ett nytt exempel i databasen. Ett objekt med exempel-data måste skicaks med i anropet. |
-| PUT | `/example/:ID` | Uppdaterar ett existerande exempel i databasen. Ett objekt med exempel-data måste skicaks med i anropet. |
-| DELETE | `/example/:ID` | Raderar ett exempel med angivet ID. |
+| POST | `authentication/register` | Registrerar användare. |
+| POST | `authentication/login` | Loggar in användare. | 
+| GET | `/secret` | Returnerar blob-data av en jpg |
 
-Följande exempel-objekt returneras vid lyckat get-anrop i JSON-format.
+Följande JSON-objekt behöver skickas med vid registrering:
 ```bash
 {
-    
+    "username": "användarnamn",
+    "email": "e-post",
+    "password": "lösenord"
   }
 ```
-
+Följande JSON-objekt behöver skickas med vid inloggning:
+```bash
+{
+    "username": "användarnamn eller e-post",
+    "password": "lösenord"
+  }
+```
 
 ## ⬢ Utvecklare
 **Ludvig Rosenqvist** — *Student*
