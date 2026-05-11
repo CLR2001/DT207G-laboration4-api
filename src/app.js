@@ -8,7 +8,7 @@ import pc from "picocolors";
 const app = express();
 const port = process.env.PORT || 3000;
 const mongoURI = process.env.MONGO_URI;
-import exampleRoutes from './routes/example.js';
+import routes from './routes/routes.js';
 
 /* ------------------------------- Middleware ------------------------------- */
 app.use(cors({
@@ -21,7 +21,7 @@ app.use(cors({
 app.use(express.json());
 
 /* --------------------------------- Routes --------------------------------- */
-app.use('/example', exampleRoutes);
+app.use('/example', routes);
 
 /* ------------------------------- Connection ------------------------------- */
 mongoose.connect(mongoURI)
