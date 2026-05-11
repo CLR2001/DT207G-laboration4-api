@@ -1,5 +1,5 @@
 # ◈ Laboration 4 API
-Detta repository innehåller ett API för laboration 4 i kursen 4.
+Detta repository innehåller ett API för laboration 4 i kursen DT207G.
 
 Detta API hanterar sparandet och skapandet av användarkonton. För säkerhet sparas inga lösenord i ren text på databasen. Vissa routes på API är låsta och går endast att komma åt efter en lyckad autentisering med hjälp av jsonwebtoken.
 
