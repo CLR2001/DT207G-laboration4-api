@@ -64,34 +64,23 @@ router.post('/', async (req, res) => {
 });
 
 router.post('/login', async (req, res) => {
-  const { username, email, password } = req.body;
+  try {
+    const user = await User.login(req.body.username, req.body.password);
 
-  const user = await User.findOne({ 
-    $or: [ {username}, {email} ]
-  });
-
-   if (!user) {
-    return res.status(401).json({
-      error: 'Invalid input',
-      message: `Invalid login credentials`
+    const payload = {_id: user._id}
+    const token = jwt.sign(payload, process.env.JWT_SECRET_KEY, {expiresIn: '1h'});
+    res.status(200).json({
+      user: user._id,
+      token: token,
+      message: 'Successfully logged in'
     });
-   }
 
-   const correctPassword = await bcrypt.compare(password, user.password);
-
-   if (!correctPassword) {
-    return res.status(401).json({
-      error: 'Invalid input',
-      message: `Invalid login credentials`
-    });
-   }
-
-   const payload = {_id: user._id}
-   const token = jwt.sign(payload, process.env.JWT_SECRET_KEY, {expiresIn: '1h'});
-   res.status(200).json({
-      message: 'Successfully logged in',
-      token: token
-    });
+  } catch (error) {
+    res.status(400).json({
+      error: 'Login failed',
+      message: error.message,
+    })
+  }
 });
 
 /* -------------------------------------------------------------------------- */
