@@ -1,28 +1,30 @@
 import express from 'express';
-import Example from '../models/user.model.js';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import User from '../models/user.model.js';
 const router = express.Router();
 
 /* -------------------------------------------------------------------------- */
 /*                                     GET                                    */
 /* -------------------------------------------------------------------------- */
 router.get('/', async (req, res) => {
-  const example = await Example.find({});
-  res.json(example);
+  const user = await User.find({});
+  res.json(user);
 });
 
 router.get('/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const example = await Example.findById(id);
+    const user = await User.findById(id);
 
-    if (!example) {
+    if (!user) {
       return res.status(404).json({
         error: 'Not found',
         message: `ID not found`
       });
     }
 
-    res.json(example);
+    res.json(user);
 
   } catch (error) {
     res.status(500).json({ 
@@ -37,12 +39,12 @@ router.get('/:id', async (req, res) => {
 /* -------------------------------------------------------------------------- */
 router.post('/', async (req, res) => {
   try {
-    const newExample = new example(req.body);
-    const savedexample = await newExample.save();
+    const newUser = new User(req.body);
+    const savedUser = await newUser.save();
 
     res.status(201).json({
-      message: 'example saved successfully',
-      data: savedExample
+      message: 'User saved successfully',
+      data: saveduser
     });
 
   } catch (error) {
@@ -61,18 +63,49 @@ router.post('/', async (req, res) => {
   }
 });
 
+router.post('/login', async (req, res) => {
+  const { username, email, password } = req.body;
+
+  const user = await User.findOne({ 
+    $or: [ {username}, {email} ]
+  });
+
+   if (!user) {
+    return res.status(401).json({
+      error: 'Invalid input',
+      message: `Invalid login credentials`
+    });
+   }
+
+   const correctPassword = await bcrypt.compare(password, user.password);
+
+   if (!correctPassword) {
+    return res.status(401).json({
+      error: 'Invalid input',
+      message: `Invalid login credentials`
+    });
+   }
+
+   const payload = {_id: user._id}
+   const token = jwt.sign(payload, process.env.JWT_SECRET_KEY, {expiresIn: '1h'});
+   res.status(200).json({
+      message: 'Successfully logged in',
+      token: token
+    });
+});
+
 /* -------------------------------------------------------------------------- */
 /*                                     PUT                                    */
 /* -------------------------------------------------------------------------- */
 router.put('/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const updatedExample = await Example.findByIdAndUpdate(id, req.body, {
+    const updatedUser = await User.findByIdAndUpdate(id, req.body, {
       new: true, 
       runValidators: true
     });
 
-    if (!updatedExample) {
+    if (!updatedUser) {
       return res.status(404).json({
         error: 'Not found',
         message: `ID not found`
@@ -80,8 +113,8 @@ router.put('/:id', async (req, res) => {
     }
 
     res.json({
-      message: 'example updated successfully',
-      data: updatedExample
+      message: 'User updated successfully',
+      data: updatedUser
     });
 
   } catch (error) {
@@ -106,9 +139,9 @@ router.put('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => { 
   try {
     const  { id } = req.params;
-    const deletedExample = await Example.findByIdAndDelete(id);
+    const deletedUser = await User.findByIdAndDelete(id);
     
-    if (!deletedExample) {
+    if (!deletedUser) {
       return res.status(404).json({
         error: 'Not found',
         message: `ID not found`
@@ -116,8 +149,8 @@ router.delete('/:id', async (req, res) => {
     }
 
     res.json({
-      message: 'example deleted successfully',
-      data: deletedExample
+      message: 'User deleted successfully',
+      data: deletedUser
     });
 
   } catch (error) {
