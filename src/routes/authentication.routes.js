@@ -2,6 +2,7 @@ import express from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import User from '../models/user.model.js';
+import authenticateToken from '../middleware/authenticate-token.js';
 const router = express.Router();
 
 /* -------------------------------------------------------------------------- */
@@ -49,7 +50,24 @@ router.post('/login', async (req, res) => {
     res.status(400).json({
       error: 'Login failed',
       message: `Couldn't login to account`,
-    })
+    });
+  }
+});
+
+/* -------------------------------------------------------------------------- */
+/*                                     GET                                    */
+/* -------------------------------------------------------------------------- */
+router.get('/verify', authenticateToken, async (req, res) => {
+  try {
+    res.status(200).json({
+      authenticated: true,
+      user: req.user._id
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: 'Authentication error',
+      message: `Token not valid`
+    });
   }
 });
 

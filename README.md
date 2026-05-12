@@ -21,6 +21,7 @@ Detta API använder NoSQL-databassystemet MongoDB.
 | :--- | :--- | :--- |
 | POST | `authentication/register` | Registrerar användare. |
 | POST | `authentication/login` | Loggar in användare. | 
+| GET | `authentication/verify` | Verifierar en token och returnerar status beroende på om verifieringen lyckades eller inte. |
 | GET | `/secret` | Returnerar blob-data av en jpg |
 
 Följande JSON-objekt behöver skickas med vid registrering:
