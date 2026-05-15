@@ -37,7 +37,7 @@ mongoose.connect(mongoURI)
       setTimeout(() => {
         console.log("\n-------------------------------------------");
         console.log(`  ● Server is running on port ${port}!`);
-        if (isDev) console.log(`  › ${pc.blue(pc.underline(`http://localhost:${port}/example`))}`)
+        if (isDev) console.log(`  › ${pc.blue(pc.underline(`http://localhost:${port}/`))}`)
         else console.log(`  › ${pc.blue(pc.underline('https://lab4.api.clr-server.com/'))}`);
         console.log("-------------------------------------------");
       }, 500);

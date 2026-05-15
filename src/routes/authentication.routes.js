@@ -27,7 +27,7 @@ router.post('/register', async (req, res) => {
     } else {
       res.status(400).json({
         error: 'Registration failed',
-        message: `Couldn't register account`,
+        message: error.message,
       });
     }
   }
@@ -49,7 +49,7 @@ router.post('/login', async (req, res) => {
   } catch (error) {
     res.status(400).json({
       error: 'Login failed',
-      message: `Couldn't login to account`,
+      message: error.message,
     });
   }
 });
