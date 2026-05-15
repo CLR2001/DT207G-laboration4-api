@@ -10,13 +10,12 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.pre('save', async function(next) {
-  try {
-    if(this.isNew || this.isModified('password')) {
-      this.password = await bcrypt.hash(this.password, 10);
+  if(this.isNew || this.isModified('password')) {
+    try {
+        this.password = await bcrypt.hash(this.password, 10);
+    } catch (error) {
+      throw error
     }
-    next();
-  } catch (error) {
-    next(error);
   }
 });
 
